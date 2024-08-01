@@ -1,0 +1,1 @@
+The files inside the data folder are there in case you cannot download the data using the R code. There are intermediate files that are useful if you need to start runing the code half-way.
