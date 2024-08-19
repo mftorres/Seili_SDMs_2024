@@ -10,11 +10,21 @@ knitr::opts_chunk$set(echo = TRUE)
 #knitr::opts_chunk$set(crop = FALSE)
 ```
 
+# 0. TL;DR
+
+**Download the data in [this link](https://vult-my.sharepoint.com/:f:/g/personal/fernanda_torres_gmc_vu_lt/Ep-6oslAwj5IhTA_xuogO3cBxdVWeyeIJfGCsD2sVifSdA?e=vZviXE)**
+
+**extract the files within the folder/subfolders** and make sure your file paths look like `Documents/turku/file.csv`
+
+Create a folder within Documents called `turku` and place the data there. The files here are inputs and outputs required for the tutorial, in case you cannot download something from the servers.
+
+**Install Java from Oracle by downloading it [from here](https://www.oracle.com/java/technologies/downloads/#jdk22-windows)**. If you need further instructions, you can check **[this link](https://docs.oracle.com/en/java/javase/22/install/overview-jdk-installation.html)**
+
 # 1. Introduction
 
-**biodiversity** (or biological diversity) encompasses the entire variaty of life (from genes to ecosystems), of which a small proportion is used by humans for food, water, medicine, building materials, amongst others. According to the [United Nation's definition of biodiversity](https://www.un.org/en/climatechange/science/climate-issues/biodiversity), a half of the global gross domestic product depends on nature and its diversity. It took around 4.5 billion years for Earth's species and ecosystems to evolve to how we observe it today, but a recently emerged species (*Homo sapiens*) are having an unprecedented impact on biodiversity's state. Today, around a million species are threteaned with extinction and human impact is the biggest cause.
+**biodiversity** (or biological diversity) encompasses the entire variation of life (from genes to ecosystems), of which a small proportion is used by humans for food, water, medicine, building materials, among others. According to the [United Nation's definition of biodiversity](https://www.un.org/en/climatechange/science/climate-issues/biodiversity), a half of the global gross domestic product depends on nature and its diversity. It took around 4.5 billion years for Earth's species and ecosystems to evolve to how we observe it today, but a recently emerged species (*Homo sapiens*) are having an unprecedented impact on biodiversity's state. Today, around a million species are threatened with extinction and human impact is the biggest cause.
 
-during this tutorial, we will focus on mollusca species that are threatened with extinction and which we can find in the Baltic sea. We will use georeferenced data to estimate the likely distribution for these species to identify where are the hotspots of mollusca biodiversity in Europe. Finally, we will compare the spatial patterns of high mollusca biodiversity with areas in the Baltic sea with a high index of human impact.
+During this tutorial, we will focus on mollusca species that are threatened with extinction and which we can find in the Baltic sea. We will use georeferenced data to estimate the likely distribution for these species to identify where are the hotspots of mollusca biodiversity in Europe. Finally, we will compare the spatial patterns of high mollusca biodiversity with areas in the Baltic sea with a high index of human impact.
 
 Our **aim** is to understand how to use spatial data to identify areas that require better environmental policies. Understanding and quantifying biodiversity (as species counts) and biodiversity's threats at a spatial scale will allow us to pinpoint areas where species are most at risk from pollution and human activities. The data we generate with similar analyses generate data that is essential for prioritising conservation efforts.
 
@@ -23,7 +33,7 @@ The data and methods used here are a "toy example" for learning how to **model s
 
 **Objectives:**
 
-1. Obtain and curate georeferenced data for threathened mollusca species living in the tidal areas.
+1. Obtain and curate georeferenced data for threatened mollusca species living in the tidal areas.
 
 2. Estimate distribution models for the selected molluscan species.
 
@@ -37,7 +47,7 @@ In 2015, the United Nations adopted an agenda for 2030 with 17 [Sustainable Deve
 
 For our conversation, some relevant goals and targets include:
 
-**Reducing threats to biodiversity. Measured as succesful once:**
+**Reducing threats to biodiversity. Measured as successful once:**
 
 Target 1: All areas are planned or managed to bring loss of areas of high biodiversity importance close to zero.
 
@@ -47,7 +57,7 @@ Target 7: Pollution is reduced, halving nutrient loss and pesticide risk.
 
 In our tutorial we are:
 
-**1)** Identifying areas of high biofiversity that are of conservation importance as they include species threatened with extinction.
+**1)** Identifying areas of high biodiversity that are of conservation importance as they include species threatened with extinction.
 
 **4)** Identifying areas of human-wildlife conflict that need better management.
 
@@ -60,7 +70,7 @@ During the tutorial, we focus on two aspects of pollution and human impact that 
 
 Eutrophication is a process that starts with the excessive accumulation of nutrients in a body of water, e.g. a lake or the coast of the sea. When the accumulation persists, colonies of microorganisms that use those nutrients as food grow exponentially and deplete the water of oxygen. Other organisms living in that water become vulnerable to hypoxia and potentially die (once they reach anoxia).
 
-Excess nutrients, such as nitrogen and phosphorus, which naturally occur in the environment, often result from human activities. These activities include the use of fertilizers, the generation of wastewater, exhaust emissions, and animal waste.
+Excess nutrients, such as nitrogen and phosphorus, which naturally occur in the environment, often result from human activities. These activities include the use of fertilizers, the generation of waste water, exhaust emissions, and animal waste.
 
 A symptom of eutrophication is the greening of water bodies due to algal blooms (an overgrowth of algae). These blooms block sunlight, release toxins, and produce unpleasant odors. As the algae die, bacteria decompose them, consuming even more oxygen and accelerating hypoxia, which can lead to the formation of a "dead zone" where no organisms can survive. This information and more is available [here](https://www.usgs.gov/mission-areas/water-resources/science/nutrients-and-eutrophication)
 
@@ -70,30 +80,97 @@ European seas are not exempt from pollution and substances that pose risks to hu
 
 Hazardous and polluting substances in the sea are measured in fish and shellfish, which includes mollusca species! We measure substance concentration from these animals because they are a food source for marine life and species, meaning that what they accumulate ultimately accumulates in human bodies too. In humans, the consequences of accumulating these substances go from organ failure, to increased risk cancer, and neurological disorders ([Noman et al., 2022](https://www.nature.com/articles/s41598-022-08471-y)).
 
-Mollusca species regularly screened for substance accumulation include *Cerastoderma edule* (common cockle), *Mya arenaria* (softshell clam), *Ruditapes philippinarum* (Manila clam), *Mytilus edulis* (blue mussel), *M. galloprovincialis* (Mediterranean mussel), *Crassostrea gigas* (Pacific oyster), *Ostrea edulis* (native oyster) and *Macoma balthica* (Baltic clam). These species are common and broadly distributed throughout the globe, which makes them a good target for monitorying pollution. However, we are not taking them into account for the tutorial because our main question regards **biodiversity of threatened species and the overlap between biodiversity hotspots and highly polluted areas**.
+From Noman et al., 2022, this figure shows the ratio between exposure to toxic elements and highest concentration limit (for health) in adults and children consumers of targeted species (fish and shellfish). The **ratio < 1 means no non-carcinogenic risk effects**, and the **ratio > 1 means that the community is likely to have a non-carcinogenic risk**. The accumulation of non-carcinogenic risks becomes a health risk. Toxic elements are all heavy metals.
 
-Levels of pollutants are between moderate and high in the Baltic sea and, for example, concentrations of polychlorinated biphenyls (PCBs, carcinogenics) in Baltic sea mussels [are higher than 10 times the environmental quality standard](https://www.eea.europa.eu/data-and-maps/figures/concentrations-of-cb188-relative-to-1). Humans are exposed to these compounds via the consumption of contaminated meat, fish, and dairy ([EFSA Panel on Contaminants in the Food Chain - CONTAM et al., 2018](https://efsa.onlinelibrary.wiley.com/doi/full/10.2903/j.efsa.2018.5333))
+![accumulation of heavy metals and non-carcinogenic risks. Taken from Noman et al., 2022 ](images/concentration_compounds_consumer.jpg)
+
+Mollusca species regularly screened for substance accumulation include *Cerastoderma edule* (common cockle), *Mya arenaria* (softshell clam), *Ruditapes philippinarum* (Manila clam), *Mytilus edulis* (blue mussel), *M. galloprovincialis* (Mediterranean mussel), *Crassostrea gigas* (Pacific oyster), *Ostrea edulis* (native oyster) and *Macoma balthica* (Baltic clam). These species are common and globally distributed, filter feeders and effective "[harvesters]()" of contaminants, all of which makes them a good target for monitoring pollution. However, we are not taking them into account for the tutorial because our main question regards **biodiversity of threatened species and the overlap between biodiversity hotspots and highly polluted areas**. Nevertheless, threatened species have ecological roles of which common species and the ecosystems depend.
+
+In the Baltic sea, the levels of pollutants are between moderate and high. For example, concentrations of polychlorinated biphenyls (PCBs, carcinogenics) in Baltic sea mussels [are higher than 10 times the environmental quality standard](https://www.eea.europa.eu/data-and-maps/figures/concentrations-of-cb188-relative-to-1). Humans are exposed to these compounds via the consumption of contaminated meat, fish, and dairy ([EFSA Panel on Contaminants in the Food Chain - CONTAM et al., 2018](https://efsa.onlinelibrary.wiley.com/doi/full/10.2903/j.efsa.2018.5333))
+
+This figure shows the accumulation of CB118 compounds relative to the Environmental Quality Standard (EQS). Note the accumulation at the Baltic sea.
+
+![accumulation of PCB types. Taken from EEA](images/baltic_sea_acumulation.jpg)
+
+## The Baltic sea
+
+The Baltic sea is one of the largest brackish water bodies (between saline and fresh water) and it is characterised by shallow surfaces, lack of tides, and relative isolation from other seas. Its [distinctive environmental conditions](http://stateofthebalticsea.helcom.fi/overview/about-the-baltic-sea/) make the Baltic sea home of unique biodiversity. Marine waters enter the Baltic from the North sea whereas fresh waters enter from rivers, creating a gradient of salinity [from 0 psu in the north and east to 18 psu in the south](http://stateofthebalticsea.helcom.fi/wp-content/uploads/2023/10/About-the-BalticSea-chapter.pdf) (one Practical Salinity Unit equals one g of salt per 1000 g of water).
+
+Levels of salinity in the Baltic sea from 2006 to 2015, PSU: Practical Salinity Units. Taken from [Geburzi et al., 2022](https://onlinelibrary.wiley.com/doi/10.1002/ece3.8868)
+
+![Levels of salinity inthe Baltic sea from 2006 to 2015, PSU: Practical Salinity Units. Taken from Geburzi et al., 2022 ](images/baltic_salinity.png)
+
+According to [The Baltic Marine Environment Protection Commission – also known as the Helsinki Commission (HELCOM)](https://helcom.fi/about-us/), "key pressures on the Baltic Sea ecosystem include eutrophication, pollution from hazardous substances, land use and over-fishing, but several other pressures also add to the total impact"
+
+HELCOM monitors eutrophication and human impact activities in the Baltic sea, in addition to calculating an Impact Index (HOLAS 3) for monitoring the concentration of pharmaceuticals in its waters. The [list of pharmaceuticals](https://helcom.fi/wp-content/uploads/2019/08/BSEP149.pdf) include anti-inflammatory and analgesic compounds, antimicrobials, hormones, central nervous system agents, in short, pretty scary things that should not be dissolved on water uncontrolled.
+
+This map shows you the levels of eutrophication and human impact in the Baltic sea (taken from [HELCOM Map and Data service)(https://maps.helcom.fi/website/mapservice/index.html)).
+
+![Eutrophication and human impact in the Baltic sea](images/eutrophication_human_impact.png)
+A zoom into the Seili island!
+
+![Eutrophication and human impact in the Seili island](images/eutrophication_human_impact_seili.png)
+
+## Mollusca biodiversity
+
+Mollusca is a group of invertebrate animals with around 90 thousand described species - yet, they remain poorly studied ([Sousa, 2024](https://www.frontiersin.org/journals/ecology-and-evolution/articles/10.3389/fevo.2024.1176380/full); [Chapman, 2009](https://citeseerx.ist.psu.edu/document?repid=rep1&type=pdf&doi=66a21c6b7819005428567eca2bc3e2f45120ce46)). Molluscs have a huge diversity of body shapes and ecological adaptations, and are characterised by a body consisting of a solid muscle, having a mantle (the dorsal body wall, can secrete calcium carbonate to create a shell), a radula used for feeding, and a unique nervous system.
+
+The following image shows just a small fraction of the different body shapes in Mollusca. The image is taken from the teaching section of the [American Museum of Natural History (USA)](https://www.amnh.org/explore/ology/biodiversity/tree-of-life2/mollusks)
+
+![mage showing body diversity of mollusca, from the American Museum of Natural History (USA)](images/mollusca_bodyshapes.png)
+
+The number of species described by science, by high-level habitats, taken from [Rosenberg, 2014](https://doi.org/10.4003/006.032.0204)
+
+![Number of mollusca species by hihg-level habitats, from Rosenberg, 2014](images/mollusca_biodiversity_habitats.png)
+
+The [Global Biodiversity Information Facility - GBIF](https://www.gbif.org/) database, an open access centralised data infrastructure that contains information about where and when species have been recorded. For mollusca, GBIF contains 20,825,128 occurrence records from 182,230 species. Most of those occurrences come from preserved specimens, i.e. collected organisms that belong to a natural collection, closely followed by human observations.
+
+![Proportion of observation type for all mollusca data in GBIF](images/mollusca_gbif_records.png)
 
 
-## **1. Preparing your data**
+Globally, must mollusca species are not considered threatened according to the International Union for Conservation of Nature ([IUCN](https://www.iucn.org/)) and its [Red List of threatened species](https://www.iucnredlist.org/). The IUCN pubishes the RedLists after assessing the extinction risks of species for which enough data is available. In summary, experts on a particular **taxon** (unit used in the science of biological classification) gather all the data on the taxon's distribution, individual counts, genetic diversity, ecological requirements, extent of its natural habitat, and other biological data, as well as past trends and future predictions of the information listed before. 
 
-This section will help you install the software and libraries needed for carrying out the workshop and it will help you gather and prepare the data needed.
+Once the data is assessed, a taxon can be classified in one of the following (taken from the [RedList guidelines version version 16, March 2024](https://www.iucnredlist.org/resources/redlistguidelines)):
 
-### **1.1. Software requirements:**
+![IUCN extinction risk categories](images/iucn_categories.png)
 
-**1.1.1. R and Rstudio installation:** You can download and install R (first) and Rstudio (second) in your computer following these instructions <https://posit.co/download/rstudio-desktop/>.
+Categories like **extinct** and **extinct in the wild** are self-explanatory and both imply that there is no reasonable doubt that the species (or taxon) disappeared. They are undetected after extensive surveys and significant sampling effort. For the second category, some individuals might be kept in captivity. **Critically endangered** species meet all of the following criteria:
 
-**1.1.2. Start Rstudio and install libraries:** Start Rstudio. If you are prompt messages about sending crash reports to the developers, you can choose not to do it. Once Rstudio is running, go to the top left corner where the green plus icon is and open a new Rscript file. That file is where you will write and comment the code, and you can execute the code written there my placing the cursor on the line and pressing `Ctrl + Enter`. 
+  **A.** Population size reduction (past, present and/or projected)
+  **B.** Geographic range size, and fragmentation, few locations, decline or fluctuations
+  **C.** Small and declining population size and fragmentation, fluctuations, or few sub-populations
+  **D.** Very small population or very restricted distribution
+  **E.** Quantitative analysis of extinction risk (e.g., Population Viability Analysis).
+  
+**Endangered** species meet any of the criteria above as applied to "endangered", **vulnerable** species meet any of the same criteria for "vulnerable" (see the an example below), **Near threatened** species have been assessed but do not qualify for "critically", "endangered", or "vulnerable". However, the assessment places the species very, very close to those categories or projects it will classify as such in the future. **Least concern** species do not classify as the above and many species are placed here; that does not mean those species cannot classify as other categories in the future. Species classified as **data deficient** don't have enough data for a complete assessment. Finally, a **not evaluated** species simply has not yet been assessed.
 
-You can have a look at this introductory material on Rstudio <https://rafalab.dfci.harvard.edu/dsbook/getting-started.html>.
+The following is an example of how the five criteria have different thresholds applied to the critically endangered, endangered, and vulnerable categories. 
 
-**1.1.3. Install Rtools:** To install some libraries, we need to first install Rtools, available here: <https://cran.rstudio.com/bin/windows/Rtools/>. The latest version is Rtools44. On that website, go to the "Installing Rtools44" section and click in the link **Rtools44 installer**. Install the package.
+![Example of thresholds for one criterium and three IUCN risk categories](images/categories_criteria_example.png)
 
-**1.1.4. Install the libraries:** For installing the libraries, you just need to execute the following code. Pay particular attention to errors like "exit status 1" or "Failed to compile library" as they indicate that there was a problem when installing the libraries. Often, the solution is written in the error itself, reading the last lines after installing each library will help you troubleshoot problems.
+Up to 2024, the assessment of mollusca species in Europe is shown below. The dataset we are using today includes critically endangered, endangered, and vulnerable species that live in marine waters.
 
-**1.1.5. Install Java:** Go to https://www.oracle.com/java/technologies/downloads/ and choose your operative system (Linux, Windows, or Mac). Download the 64x installer file, double click on the file after download and follow instructions.
+![IUCN classification of mollusca species in Europe](images/iucn_EUmollusca.png)
 
-**Note:** Lines that start with the symbol `#` are comments and not considered as code (instructions) by the machine. You can use it to comment and annotate the code so that you remember what are you doing. For the purpose of this guide, we leave a lot of comments in the code. Please read them :)
+# 2. Preparing the software and data
+
+This section will help you install the packages needed for the workshop and it will guide you through the basic practices for cleaning the data. The nature of observation records is messy and the information is logged by different people, with different levels of uncertainty (e.g. digits in the coordinates), quality, and taxonomic certainty (e.g. records might be unidentified). Thus, removing the data we cannot trust is key for a robust analysis. The steps here are basic but biodiversity analyses involve more decisions than we are considering here. Those decisions, e.g. which predicting variables to use (environmental/ecological), the amount of data to use, variable transformations, etc, depend on the organisms we target with our research questions. In reality, spatial analyses of biodiversity requires more comprehensive methods suited for the questions at hand. That said, the methods in this tutorial are a good starting point.
+
+## 2.1. Software requirements:
+
+**2.1.1. R and Rstudio installation:** You can download and install R (first) and Rstudio (second) in your computer following these instructions [https://posit.co/download/rstudio-desktop/](https://posit.co/download/rstudio-desktop/). Right now, you are likely using pre-installed software for the summer school.
+
+**2.1.2. Start Rstudio:** Start Rstudio. If you are prompt messages about sending crash reports to the developers, you can choose not to do it. Once Rstudio is running, go to the top left corner where the green plus icon is and open a new Rscript file. All the code you will write and the comments to it will go into that file. You can execute the code you wrote there by placing the cursor on the line and pressing `Ctrl + Enter`. Alternatively, you can copy the code from your file directly into your console and hit `Enter` to execute it.
+
+You can have a look at this introductory material on Rstudio [https://rafalab.dfci.harvard.edu/dsbook/getting-started.html](https://rafalab.dfci.harvard.edu/dsbook/getting-started.html).
+
+**2.1.3. Install Rtools:** To install some libraries, we need to first install Rtools, available here: [https://cran.rstudio.com/bin/windows/Rtools/](https://cran.rstudio.com/bin/windows/Rtools/). The latest version is Rtools44. On that website, go to the "Installing Rtools44" section and click in the link **Rtools44 installer**. Install the software from the downloaded file. Re-starting Rstudio might be a good idea.
+
+**2.1.4. Install the libraries:** For installing the libraries, you just need to execute the code in the following cell (though all libraries are likely installed already in the remote machines). Pay particular attention to errors like "exit status 1" or "Failed to compile library" as they indicate that there was a problem. Read the error and follow the instructions if that is the case. Often, the solution is written in the error itself, reading the last lines after installing each library will help you troubleshoot problems.
+
+**2.1.5. Install Java:** Go to [https://www.oracle.com/java/technologies/downloads/](https://www.oracle.com/java/technologies/downloads/) and choose your operative system (Linux, Windows, or Mac). Download the 64x installer file, double click on the file after download and follow instructions. Again, you are likely to be working in a remote machine that has Java already installed. If you do it on your own machine, then re-start Rstudio (and your machine) for good measure. 
+
+**Note:** Lines that start with the symbol `#` are comments and not considered as code by the machine. You can use the symbol at the start of your text lines to comment and annotate the code. Commenting your code will help you remember what are you doing. For the purpose of this guide, we leave a lot of comments in the code. Please read them :)
 
 
 ```{r setuplibs, eval=FALSE, echo=TRUE}
@@ -107,26 +184,24 @@ install.packages("rgbif")
 # for data manipulation
 install.packages("dplyr")
 install.packages("readr")
-
+install.packages("data.table")
 
 # to clean the georeferenced records
 install.packages("CoordinateCleaner")
 install.packages("countrycode")
 
-
 # for analysing spatial data
 install.packages("sp")
 
-# for manipulating geographc data and for modelling - raster files and bioclim data
+# for manipulating geographic data and for modelling - raster files and Bio-Oracle environmental data
 install.packages("raster")
 install.packages("dismo")
-install.package("sdmpredictors")
-devtools::install_github("bio-oracle/biooracler") # click one or read and follow instructions. Ignore warnings
+install.packages("sdmpredictors")
 
 # modeling and model evaluation of species distributions
 install.packages("biomod2")
 
-# algorithm for species distribution modeling
+# algorithm for species distribution modeling and library for loading Java
 install.packages("maxnet")
 install.packages("rJava")
 
@@ -141,18 +216,21 @@ install.packages("sf")
 
 ```
 
-You can install packages at the same time runnig the following line; however, the output is long and you might miss errors in the installation.
+You can install packages at the same time running the following line; however, the output is long and you might miss errors in the installation.
 
 ```{r setuplibs2, eval=FALSE, echo=TRUE}
 
-# edit once I clean libraries that we dont need
-install.packages(c("rgbif","dplyr","CoordinateCleaner","countrycode","sp","raster","dismo","biomod2","maxnet","ggplot2","maps","terra","sf","countrycode","readr"))
+install.packages(c("devtools","rgbif", "dplyr", "CoordinateCleaner", "countrycode", "sp",
+  "raster", "dismo", "sdmpredictors", "biomod2", "maxnet", "rJava", 
+  "ggplot2", "maps", "viridis", "terra", "sf", "readr", "data.table"))
+
 ```
 
-Finally, you need to load the libraries to be able to use them. Load them every time you start Rstudio.
+Once everything is installed, and every time you restart Rstudio or delete the environmental data, you need to load the libraries. A lot of the errors in the code appear when we forget to load the libraries.
 
 ```{r loadlibs, eval=TRUE, echo=TRUE}
 
+library("devtools")
 library("rgbif")
 library("dplyr")
 library("CoordinateCleaner")
@@ -160,97 +238,117 @@ library("countrycode")
 library("sp")
 library("raster")
 library("dismo")
+library("sdmpredictors")
 library("biomod2")
+library("rJava")
 library("maxnet")
 library("ggplot2")
 library("maps")
+library("viridis")
 library("terra")
 library("sf")
 library("readr")
 library("data.table")
-library("sdmpredictors")
-library("biooracler")
-library("viridis")
 
+# set the maximum RAM capacity for Java
 options(java.parameters = "-Xmx10g")
-library("rJava")
 
 # test the rJava installations
+# this should show the version of Java that you have installed on your computer
 .jinit()
 .jcall("java/lang/System", "S", "getProperty", "java.version")
 
 ```
 
+## 2.1. Obtaining georeferrenced data:
 
-### **1.2. Obtaining georeferrenced data:**
+The very first thing to do before you start working is to **set your working directory**. I recommend you navigate to your `Documents` folder, create a folder called `turku` (name chosen for reasons I won't explain) and set that folder as your working directory.
 
-The very first thing to do is to set your working directory. Please change the path to reflect your path to `Documents`. I recommend you create a folder there called `turku`, that will let you run the code smoothly.
+For the following code, please change the path to reflect your path to `turku`. Every file you write and read will be in that folder.
 
 
 ```{r setwd, eval=FALSE, echo=TRUE}
 
-# set the working directory, same folder where you keep the georeferrenced data
-# replace the path with your path
+# set the working directory, same folder where you keep the georeferenced data
+# replace the path with your path, particularly the username
 setwd("C:/Users/username/Documents/turku/")
 
 ```
 
-We will use georeferenced data from mollusca species. Georeferenced data are sampling or observational records of a species with associated coordinates, information that allow us to have spatial resolution. It is possible to download the data from the <gbif.org> website directly but doing it through a library makes the process reproducible.
+Our spatial analysis of biodiversity requires georeferenced data from mollusca species. By georeferenced, I mean records or observations of a species or organism that has coordinate data associated to it. The coordinate information allows us to use the data in a spatial context, knowing where it was observed and using the coordinates to extract environmental or spatial data for those same coordinates.
 
-**Note:** There is no need to execute the code in the following box. Running the command takes a while and disruptions on the internet service can result in errors. That said, it is good for you to have the code if you want to run similar analyses with different organisms.
+It is possible to download the data directly from **GBIF**, but using the library for getting the data makes the process reproducible and integrates the download steps into the code. For downloading data from GBIF, you need to create an account and then log in (at no cost). Every download is associated with a DOI number that can be used for citing the exact database and version thereof used for the analyses (good for publication and reproducibility).
 
+**Note:** We don't need to execute the code today because you have the data available in your folders. The download can take hours and we don't have much time to spare. Additionally, internet disruptions can result in download errors. We provide you with the code here in case you want to run similar analyses in the future.
+
+This is how the GBIF portal looks like, for mollusca species, zooming in into the Baltic sea:
+
+![GBIF portal for mollusca](images/gbif_mollusca.png)
 
 ```{r downloadgbif, eval=FALSE, echo=TRUE}
 
-# define the taxon of interest
+# define the taxon of interest, it can be a species name, a genus,
+# a family, an order
+# basically, any accepted name for a taxonomic level
 taxon <- name_backbone(name = "Mollusca")$usageKey
 
-# create a list with bounding coordinates to delimit the data download to Europe
-# the order is: minimum longitude, minimum latitude, maximum longitude, maximum latitude
+# create a vector with bounding coordinates to delimit the data download
+# to Europe
+# the order is: minimum longitude, minimum latitude,
+# maximum longitude, maximum latitude
 eubbox <- c(-20, 32, 40, 75)
 
 # get the data
-# be pacient, this step will take a while to run!
+# this step will take a while to run!
+# ensure internet connectivity!
 mdata <- occ_search(
   taxonKey = taxon,
   hasCoordinate = TRUE, # to ignore records with no coordinate data
+  # provides the minimum longitude and latitude
   decimalLongitude = paste(eubbox[1], eubbox[3], sep = ","),
+  # provides the maximum longitude and latitude
   decimalLatitude = paste(eubbox[2], eubbox[4], sep = ","),
-  limit=100000
+  limit=100000 # maximum number of records to download if there is more
 )
 
 # now, let's check the first couple of records in data
 head(mdata$data)
 
-# save the data to a table so that you don't have to download it again
+# save the data to a table so that you don't have to download it again!
 readr::write_delim(mdata, "mollusca_gbif_raw.csv", delim = "\t")
 
 ```
 
+## 2.2. Cleaning the data:
 
-### **1.3. Cleaning the data:**
+The data we downloaded are all the records available at GBIF for all mollusca species, but we are working only with a subset of all species. We can use a few basic Linux commands to filter out the data we don't need and keep the records for the species we are working with. We are also keeping species that are distributed throughout marine habitats, particularly coastal and tidal habitats, which include:
 
-we need to filter the GBIF molluska data to get only the species that occur in marine habitats. Those habitats include (numbers indicate species in the IUCN database)
+  - Marine intertidal (15)
+  - Marine coastal or supratidal (54)
+  - Marine neritic (69)
 
-- Marine intertidal (15)
-- Marine coastal or supratidal (54)
-- Marine deep benthic (56)
-- Marine oceanic (47)
-- Marine neritic (69)
+For the following code, you need to work on the command line (Ubuntu or the Terminal)
 
-For the following code, you need to work on the command line (Ubuntu)
+``` {r cleanraw, eval=FALSE, echo=TRUE}
 
-``` {Bash cleanraw, eval=FALSE, echo=TRUE}
-
-# get a list of the Molluska species living in the coastal or shallow area, from the IUCN data
+# get a list of the Mollusca species living in the coastal or shallow area,
+# from the IUCN data
+# the cut command splits rows by a delimiter (comma here)
+# the flag -f indicates which field to print to screen
+# (species names in our case)
 cut -f 3 -d"," assessments.csv > mollusca_coastal.txt
 
 # count the number of unique species in the list
-# tail -n +2 ignores the first line in the file, which is the header of the columns
+# the tail command prints the last -n lines of a file
+# tail -n +2 ignores the first line in the file,
+# which is the header of the columns
 tail -n +2 mollusca_coastal.txt | sort | uniq | wc -l
 # 125 species
 
-# filter the raw GBIF data with geographic coordinates and keep only the species in mollusca_coastal
+# filter the raw GBIF data with geographic coordinates and keep only the
+# species in mollusca_coastal (one species per row)
+# the grep command finds a pattern (species name) and prints
+# the lines that match the pattern
 grep -f mollusca_coastal.txt mollusca_gbif_raw.csv > mollusca_gbif_selected.csv
 
 # count the total records in the GBIF data
@@ -260,33 +358,37 @@ wc -l mollusca_gbif_raw.csv
 wc -l mollusca_gbif_selected.csv
 ```
 
-To estimate an accurate species distribution model, e.g. a model that tell us where in the planet a species is likely distributed even when we cannot sample that species everywhere, we need to use data that truly represents that species' ecological niche. The data we downloaded has been submitted by other researchers to the Global Biodiversity Information Facility (GBIF), and in most cases, the data is curated. In other cases, data can have coordinates wrongly assigned, confusing latitude with longitude. Other records could represent observations within museums, botanical gardens, or zoos, which don't represent the true distribution of a species. Before we carry out any analysis, we need to remove those points from our data.
+To estimate robust/accurate species distribution models, e.g. a model that tell us where in the planet a species is likely distributed even when we cannot sample that species everywhere, we need to use data that truly represents that species' ecological niche. The data we downloaded has been submitted by other researchers to GBIF, and in most cases, the data is well curated. In other cases, data can have coordinates wrongly assigned, swapping latitude with longitude. Other records could represent observations within museums, botanical gardens, or zoos, which don't represent the true distribution of a species. Before we carry out any analysis, we need to remove those points from the data.
 
-You will be cleaning georeferrenced data that we are providing in the file `mollusca_gbif_raw.zip`. Please download that file from the GitHub repository or the file repository where you found this pre-assignment. Then, extract the file and make note of the folder where you keep it. We will be working within that directory.
+You will be cleaning georeferenced data that we are providing in the file `mollusca_gbif_raw.zip`. **Please download that file from the link provided**. Then, extract the file and place the file within the `Documents/turku` folder (your current working directory).
 
 
 ```{r loaddata, eval=TRUE, echo=TRUE}
 
 # load the georeferenced data
-# make sure the path corresponds to the path where you are and where the file is
-rawdata <- fread("./mollusca_gbif_selected.csv", sep = "\t", header = TRUE)
+# make sure the path corresponds to the path where the file is
+# the file has tabs as field delimiter
+rawdata <- fread("./mollusca_gbif_selected.csv", sep="\t", header=TRUE)
 
 # Making a copy to keep a backup of the data
+# in case you modify the table but need to check the original version
 rawdata.cc <- rawdata
 
 # change country codes from ISO2 to ISO3
 # ignore the warning messages for now
-rawdata.cc$countryCode <- countrycode(rawdata.cc$countryCode, origin =  'iso2c', destination = 'iso3c')
+rawdata.cc$countryCode <- countrycode(rawdata.cc$countryCode, origin='iso2c',
+                                      destination = 'iso3c')
 
-# run test to flag improper entries
+# run test to flag wrong entries
 rawdata.cc <- data.frame(rawdata.cc) # convert to data frame
-rawdata.flags <- clean_coordinates(x = rawdata.cc,
-                           lon = "decimalLongitude",
-                           lat = "decimalLatitude",
-                           countries = "countryCode",
-                           species = "species",
-                           tests = c("capitals", "centroids", "equal","gbif", "institutions",
-                                     "zeros")) # most tests are on by default
+rawdata.flags <- clean_coordinates(x=rawdata.cc,
+                           lon="decimalLongitude",
+                           lat="decimalLatitude",
+                           countries="countryCode",
+                           species="species",
+                           tests=c("capitals", "centroids", "equal","gbif",
+                                   "institutions", "zeros"))
+                            # most tests are applied by default
                             # also "countries" takes long, be patient
 ```
 
@@ -308,83 +410,119 @@ Testing biodiversity institutions
 Flagged 2719 records.
 Flagged 114928 of 6278166 records, EQ = 0.02.
 
-We can now make a quick plot to evaluate the raw and flagged data. Flagged data would be records that:
+We can now make a quick plot to see the raw and flagged data. Flagged data are records that:
 
-- Have invalid coordinates
-- Have the same latitude and longitude coordinates
-- Don't have coordinates at all
-- Are recorded within capital cities and thus are unlikely to reflect the true species' distribution
-- Are in the center of a country and thus are likely to have approximated geolocation
-- Have false coordinates that point to GBIF's offices
-- Have false coordinates that point to other biodiversity institutions
+  - Have invalid coordinates
+  - Have latitude and longitude coordinates set to the same number
+  - Don't have coordinates at all
+  - Are recorded within capital cities and thus are unlikely to reflect the true species' distribution
+  - Are in the center of a country and thus are likely to have approximated geolocation
+  - Have false coordinates that point to GBIF's offices
+  - Have false coordinates that point to other biodiversity institutions
 
-Let's look at the summary:
+Let's also look at the summary:
 
 ```{r gbifccsum, eval=TRUE, echo=TRUE}
+
 # summary of flags
 summary(rawdata.flags)
+
 ```
 
 Let's plot the data:
 
 ```{r gflagsmap, eval=TRUE, echo=TRUE}
+
 # map of flags
-plot(rawdata.flags, lon = "decimalLongitude", lat = "decimalLatitude", alpha = 0.5, size = 0.5)
+plot(rawdata.flags, lon = "decimalLongitude", lat = "decimalLatitude",
+     alpha = 0.5, size = 0.5)
 
-p <- ggplot(data = rawdata.flags, aes(x = decimalLongitude, y = decimalLatitude, color = .summary)) +
-  geom_point(alpha = 0.4, size = 0.5) +
-  coord_fixed() +  # This ensures the aspect ratio is fixed
+p <- ggplot(data = rawdata.flags, aes(x=decimalLongitude, y=decimalLatitude, 
+                                      color=.summary)) +
+  geom_point(alpha=0.4, size=0.5) +
+  coord_fixed() +  # to keep the axes ratio fixed
   theme_minimal() +
-  theme(aspect.ratio = 1)  # This ensures the plot area is square
+  theme(aspect.ratio = 1)  # for plotting the area in a square
 
-# Save the plot with defined dimensions (e.g., 6x6 inches)
-ggsave("flagged.png", plot = p, width = 6, height = 6, units = "in")
+# save the plot with defined dimensions (e.g., 6x6 inches)
+# if you have problems plotting the figures in the console
+# it is better to save them to your computerm then open the files
+# units are inches
+ggsave("flagged.png", plot=p, width=6, height=6, units="in")
 
-# Print the plot
+# print the plot
 print(p)
 
 ```
 
 
-And now, let's remove the flagged data:
+And now, let's remove the flagged data by creating a new table and filtering out the flagged rows:
 
 ```{r excludeFiltered, eval=TRUE, echo=TRUE}
-#
+
+# we are accessing the rawdata.flags table
+# and filtering rows that have TRUE in the ".summary" column
+# and keeping the rest
 rawdata_cl <- rawdata.flags[rawdata.flags$.summary,]
+
 ```
 
-Even after flagging georeferenced records with easily detectable problems, we need to clean up the data further by removing those with large coordinate uncertainties. We also need to remove records that are not true observations of the species, for example, fossil data or predicted presences (rather than actual presences).
+Even after flagging georeferenced records with easily detectable problems, we need to clean the data further by removing records with large coordinate uncertainties, e.g. no digits after the point. We also need to remove records that are not true observations of the species, for example, fossil data or predicted presences (rather than actual presences). Fossils represent the past, not always the current distribution of species. Moreover, fossils might represent extinct species and seldom individuals of extant species (depends on the organism, though).
 
-Remove coordinate uncertainty greater that 1000 m:
+To remove records with coordinate uncertainty greater that 1000 m (the coordinates have an associated error of 1km):
 
 ```{r coordunc, eval=TRUE, echo=TRUE}
 
-# select only records that have coordinate uncertainty 1 km2 or less
+# keep records that have coordinate uncertainty 1 km2 or less (more accurate)
 # by selecting the records in the flagged dataset
-# and filtering those out from the first iteration of clean data
+# and filtering out records that do not pass the filter of <= 1000
+# the pipe "|" indicates "or"
+# the second part of the filter indicates rows with no values (na) in
+# the column that tracks flags due to uncertainty
 
-rawdata.flags$coord1000 <- ifelse(rawdata.flags$coordinateUncertaintyInMeters <= 1000 | is.na(rawdata.flags$coordinateUncertaintyInMeters), TRUE, FALSE)
-# Leaving NA values as GBIF itself recommends leaving them
+# we do the following to keep track of the rows we will remove
+# in the same table where we track the flags applied by CoordinateCleane
+rawdata.flags$coord1000 <- ifelse(
+  rawdata.flags$coordinateUncertaintyInMeters <= 1000 | 
+    is.na(rawdata.flags$coordinateUncertaintyInMeters), TRUE, FALSE)
 
+# leaving NA values as GBIF itself recommends leaving them
+# now, from the cleaner data
 rawdata_cl2 <- rawdata_cl %>% 
-  filter(coordinateUncertaintyInMeters <= 1000 | is.na(coordinateUncertaintyInMeters))
+  filter(coordinateUncertaintyInMeters <= 1000 | 
+  is.na(coordinateUncertaintyInMeters))
 
 ```
 
 We now flagged and removed **`r rawdata.flags %>% filter(coord1000 == FALSE) %>% nrow()`** observations with coordinate uncertainty greater than 1 km.
 
-Let's continue by filtering records by the type of observation they are (human observation, sample collection, material citation, etc). We aim to keep `HUMAN_OBSERVATION, MATERIAL_SAMPLE, PRESERVED_SPECIMEN, MATERIAL_CITATION`.
+Let's continue by filtering records by their type of observation, for example, human observation, sample collection, material citation, etc. We aim to keep `HUMAN_OBSERVATION, MATERIAL_SAMPLE, PRESERVED_SPECIMEN, MATERIAL_CITATION`. Other types are fossil records or predicted observations.
 
 
 ```{r obstyp, eval=TRUE, echo=TRUE}
+
+# just print the type of record, or "basis of record"
 table(rawdata_cl2$basisOfRecord)
 ```
 
+Above, we printed all possible types of records. Now, we annotate and filter the records to keep those we want:
 
 ```{r obskeep, eval=TRUE, echo=TRUE}
-rawdata.flags$boRec <- ifelse(rawdata.flags$basisOfRecord == "HUMAN_OBSERVATION" | rawdata.flags$basisOfRecord == "MATERIAL_SAMPLE" | rawdata.flags$basisOfRecord == "PRESERVED_SPECIMEN" | rawdata.flags$basisOfRecord == "MATERIAL_CITATION", TRUE, FALSE) # flagging observations based on boR
 
-rawdata_cl2 <- rawdata_cl2 %>% filter(rawdata_cl2$basisOfRecord == "HUMAN_OBSERVATION" | rawdata_cl2$basisOfRecord == "MATERIAL_SAMPLE" | rawdata_cl2$basisOfRecord == "PRESERVED_SPECIMEN" | rawdata_cl2$basisOfRecord == "MATERIAL_CITATION")
+# again, we do this to keep track of the rows we will remove in the same table
+# where we track the flags applied by CoordinateCleaner
+rawdata.flags$boRec <- ifelse(
+  rawdata.flags$basisOfRecord == "HUMAN_OBSERVATION" | 
+    rawdata.flags$basisOfRecord == "MATERIAL_SAMPLE" | 
+    rawdata.flags$basisOfRecord == "PRESERVED_SPECIMEN" | 
+    rawdata.flags$basisOfRecord == "MATERIAL_CITATION", 
+  TRUE, FALSE) # flagging observations based on boR
+
+rawdata_cl2 <- rawdata_cl2 %>% 
+  filter(rawdata_cl2$basisOfRecord == "HUMAN_OBSERVATION" | 
+           rawdata_cl2$basisOfRecord == "MATERIAL_SAMPLE" | 
+           rawdata_cl2$basisOfRecord == "PRESERVED_SPECIMEN" | 
+           rawdata_cl2$basisOfRecord == "MATERIAL_CITATION")
 ```
 
 We flagged and removed **`r rawdata.flags %>% filter(boRec == FALSE) %>% nrow()`** observations.
@@ -394,29 +532,34 @@ Now, we are ready to get our final and cleaned dataset saved to a file:
 The final dataset has **`r nrow(rawdata_cl2) `** observations.
 
 ```{r savetsv, eval=TRUE, echo=TRUE}
-# only if you want to save the table
-# if you want to start from this point, run the following command, not this one
+
+# run this only if you want to save the table
+# if you want to start from this point, run the command in the next cell
+# not this one
 readr::write_delim(rawdata_cl2, "mollusca_cleaned.csv", delim = "\t")
 
 ```
 
-```{r readclean2, eval=FALSE, echo=FALSE}
+```{r readclean2, eval=FALSE, echo=TRUE}
+
 # if you want to start from this point
 rawdata_cl2 <- fread("./mollusca_cleaned.csv", sep = "\t", header = TRUE)
 
 ```
 
 
-## **2. Generate species distribution models**
+## 2.3. Remove redundant data:
 
-### **2.1. Remove redundant data**
-
-It is easy to bias species distribution models by incorporating redundant data, which are records for the same species in the same spatial area, whether the spatial area is defined as coordinates or as a spatila cell. Using records that occur in the same location introduces data spatial autocorrelation and inflates the models.
+It is easy to bias species distribution models by incorporating redundant data, which are records for the same species in the same spatial area, whether the spatial area is defined as coordinates or as a cell. Using records that occur in the same location introduces spatial autocorrelation and inflates the models.
 
 ```{r removedups, eval=TRUE, echo=TRUE}
 
+# creates a new table with rows that have distinct values in the
+# decimalLongitud, decimalLatitude, scientificName columns
+# at least one of those columns needs to be different for keeping the row
 rawdata_cl3 <- rawdata_cl2 %>%
-  distinct(decimalLatitude, decimalLongitude, scientificName, .keep_all = TRUE) %>%
+  distinct(decimalLatitude, decimalLongitude,
+           scientificName, .keep_all = TRUE) %>%
   as_tibble()
 
 # View the resulting table
@@ -424,6 +567,7 @@ print(rawdata_cl3)
 
 ```
 
+Like before, we are saving the data at different points of the process. We are handling a small dataset here, but it is useful to back it up when dealing with larger datasets. It saves you from having to start from scratch (time, at the expense of space on the hard drive) and can help you troubleshoot problems on the code.
 
 ```{r savetsv3, eval=TRUE, echo=TRUE}
 # only if you want to save the table
@@ -432,62 +576,95 @@ readr::write_delim(rawdata_cl3, "mollusca_cleaned_deduped.csv", delim = "\t")
 
 ```
 
-```{r readclean3, eval=FALSE, echo=FALSE}
+If you want to start running the code from here:
+
+```{r readclean3, eval=FALSE, echo=TRUE}
 # if you want to start from this point
-rawdata_cl3 <- fread("./mollusca_cleaned_deduped.csv", sep = "\t", header = TRUE)
+rawdata_cl3 <- fread("./mollusca_cleaned_deduped.csv", sep = "\t",
+                     header = TRUE)
 
 ```
 
 After removing duplicated records on the basis of coordinates and species name, our dataset has **`r nrow(rawdata_cl3) `** observations.
 
-We need to check the coordinates at the same resolution of climatic data we have
-then, remove records from the same species that fall within the same pixel
+**Spatial analyses** for biodiversity uses different types of data:
+
+  - **Occurrence data** or georeferenced data, usually collected during field surveys by researchers and geolocated using GPS devices.
+  - **Environmental data** obtained from weather stations, local soil/water monitoring experiments, or remote sensing, and extrapolated locally or globaly using statistical modelling.
+  - **Species Distribution Models (SDMs)** usually estimated from occurrence data in combination with other predicting variables to extrapolate observed presences (and absences) to areas not surveilled or surveilled poorly.
+  
+An example of a species distribution model taken from [Svenning et al., 2011](https://doi.org/10.1016/j.quascirev.2011.06.012):
+
+![species distribution modelling pipeline example, from Svenning et al., 2011](images/sdm_modelling.png)
+
+**Remote sensing** involves the use of satellites or drones to take images from **afar**, capturing light reflected from Earth's surface of various wavelengths. Optical images typically capture wavelengths visible to the naked eye and are used for land cover classification into habitats. Near infrared is used for delimiting bodies of water and monitoring vegetation (related to chlorophyll reflectance). Short infrared, microwave, and thermal infrared are often used for characterising the surface and soil features.
+
+A cartoon explaining remote sensing, taken from [this website](https://sigmaearth.com/basics-of-remote-sensing-and-gis/):
+
+![Image summarising the basics of remote sensing](images/remote_Sensing_cartoon.png)
+
+Remote sensing data is usually handled in **raster** files, which represents geographic information in a grid system where the smallest unit is one pixel or cell. Each pixel or cell is associated with a value that represents e.g., terrain height, light reflectance, etc. The size of the cell **defines** the resolution and depends on the sensor's capacity and technology. Resolution will affect the size of the raster file and the data processing times.
+
+Raster resolution, pros and cons. Taken [from ArcGIS manuals](https://desktop.arcgis.com/en/arcmap/latest/manage-data/raster-and-images/cell-size-of-raster-data.htm)
+
+![Raster resolution, from ArcGIS](images/raster_resolution.png)
+
+Having occurrences within the same cell is equivalent to having redundant data representing a species multiple times in the same cell. Since we model distribution and not abundance, multiple points within a cell represent "multiple occurrences of the environmental/surface feature" and increase the weight of those in the modelling. That causes biases and we need to remove the additional occurrences.
+
+Here, we check that coordinates are at the same resolution as the environmental data (which we know from the raster's metadata or publication) and then remove redundancy.
 
 ```{r pixelset, eval=TRUE, echo=TRUE, fig.width=6, fig.height=4, dpi=250}
 
-# remove rows with species column empty
-# Remove rows with empty species column
+# remove rows with the species name column empty
+# we cannot incorporate that data to SDMs if we don't know where they belong
 rawdata_cl3 <- rawdata_cl3 %>%
   dplyr::filter(species != "")
 
-# Define the resolution of the environmental data in degrees
+# we know that the environmental data we will use has
+# a resolution of 0.05 in degrees
 pixelsize <- 0.05
 
-# Snap the coordinates to the nearest pixel center
+# converting and assigning record coordinates to the nearest pixel/cell center
 occurrences <- rawdata_cl3 %>%
   mutate(
     lon_pixel = round(decimalLongitude / pixelsize) * pixelsize,
     lat_pixel = round(decimalLatitude / pixelsize) * pixelsize
   )
 
-# Remove duplicates within the same pixel
+# removing duplicates of the same species within the same pixel/cell
 uniqoccurrences <- occurrences %>%
   dplyr::group_by(species, lon_pixel, lat_pixel) %>%
   dplyr::slice(1) %>%
   dplyr::ungroup() %>%
   dplyr::select(species, decimalLongitude, decimalLatitude)
 
-# Print the resulting data
+# print the resulting data
 print(uniqoccurrences)
 
 # let's plot both datasets
-
-# Define the bounding box for Europe
-# the order is: minimum longitude, minimum latitude, maximum longitude, maximum latitude
+# first, we define the limits of the map we want to plot
+# the order is: minimum longitude, minimum latitude,
+# maximum longitude, maximum latitude
 eubbox <- c(-20, 32, 40, 75)
 
 
-# Plot for original occurrences
+# original occurrences
+# in grey is the background country polygons
+# in orange, the occurrences
 plot_original <- ggplot() +
-  borders("world", xlim = c(eubbox[1], eubbox[3]), ylim = c(eubbox[2], eubbox[4]), fill = "gray80") +
-  geom_point(data = occurrences, aes(x = decimalLongitude, y = decimalLatitude), color = "orange", alpha = 0.6, size = 0.5) +
+  borders("world", xlim = c(eubbox[1], eubbox[3]),
+          ylim = c(eubbox[2], eubbox[4]), fill = "gray80") +
+  geom_point(data = occurrences,
+             aes(x = decimalLongitude, y = decimalLatitude),
+             color = "orange", alpha = 0.6, size = 0.5) +
   theme_minimal() +
-  labs(title = "Original Occurrences identified to species",
+  labs(title = "Original occurrences identified to species",
        x = "Longitude", y = "Latitude") +
-  coord_quickmap(xlim = c(eubbox[1], eubbox[3]), ylim = c(eubbox[2], eubbox[4]))
+  coord_quickmap(xlim = c(eubbox[1], eubbox[3]),
+                 ylim = c(eubbox[2], eubbox[4]))
 
 
-# Print the plot
+# print the plot
 print(plot_original)
 
 ```
@@ -495,91 +672,119 @@ print(plot_original)
 
 ``` {r plotuniq, eval=TRUE, echo=TRUE, fig.width=6, fig.height=4, dpi=250}
 
-# Plot for unique occurrences for each species (within the pixels)
+# unique occurrences for each species (within the pixels)
 plot_uniq <- ggplot() +
-  borders("world", xlim = c(eubbox[1], eubbox[3]), ylim = c(eubbox[2], eubbox[4]), fill = "gray80") +
-  geom_point(data = uniqoccurrences, aes(x = decimalLongitude, y = decimalLatitude), color = "green", alpha = 0.6, size = 0.5) +
+  borders("world", xlim = c(eubbox[1], eubbox[3]),
+          ylim = c(eubbox[2], eubbox[4]), fill = "gray80") +
+  geom_point(data = uniqoccurrences,
+             aes(x = decimalLongitude, y = decimalLatitude),
+             color = "green", alpha = 0.6, size = 0.5) +
   theme_minimal() +
-  labs(title = "Unique Occurrences identified to species",
+  labs(title = "Unique occurrences identified to species",
        x = "Longitude", y = "Latitude") +
-  coord_quickmap(xlim = c(eubbox[1], eubbox[3]), ylim = c(eubbox[2], eubbox[4]))
+  coord_quickmap(xlim = c(eubbox[1], eubbox[3]),
+                 ylim = c(eubbox[2], eubbox[4]))
 
-# Print the plot
+# print the plot
 print(plot_uniq)
 
 ```
 
-Now, we are using the georeferenced clean records to extract climatic variables (BIO1 to BIO9) at the coordinates
+# 3. Generate species distribution models
 
-```{r extractbioclim, eval=TRUE, echo=TRUE}
+Now that we have cleaned the data by removing duplicate occurrences or records with incomplete coordinates (among other issues), we need to extract the environmental information at each occurrence coordinate from the different rasters we will use.
 
-# Filter species with at least three geographic records
-# you will use this list to filter the dataset and to create the models per species
+The rasters we will use contain oceanic environmental data (more on that later).
+
+## 3.1. Select species with enough data
+
+```{r extractenvocean, eval=TRUE, echo=TRUE}
+
+# filter species with at least 200 occurrence records
+# we cannot make model inferences with a single point
+# "it takes three to stats" :)
+# and create a vector with all species that have at least 200 records
+# you will use it to filter the dataset and to create one models per species
 spp3recs <- uniqoccurrences %>%
   group_by(species) %>%
   filter(n() >= 200) %>%
   distinct(species) %>%
   pull(species)
 
+# print the list
 print(length(spp3recs))
 
+# create a new table with species to model
+# using the list above to filter the previous table
 uniqspp3rec <- uniqoccurrences %>%
   filter(species %in% spp3recs)
 ```
 
+Let's look at the plot:
+
 ``` {r plotuniq3more, eval=TRUE, echo=TRUE, fig.width=6, fig.height=4, dpi=250}
 
-# Plot for unique occurrences for each species (within the pixels)
-# but for species withmore than three records
-
+# unique occurrences for kept species (within the pixels)
 plot_uniq3rec <- ggplot() +
-  borders("world", xlim = c(eubbox[1], eubbox[3]), ylim = c(eubbox[2], eubbox[4]), fill = "gray80") +
-  geom_point(data = uniqspp3rec, aes(x = decimalLongitude, y = decimalLatitude), color = "magenta", alpha = 0.6, size = 0.5) +
+  borders("world", xlim = c(eubbox[1], eubbox[3]),
+          ylim = c(eubbox[2], eubbox[4]), fill = "gray80") +
+  geom_point(data = uniqspp3rec,
+             aes(x = decimalLongitude, y = decimalLatitude),
+             color = "magenta", alpha = 0.6, size = 0.5) +
   theme_minimal() +
-  labs(title = "Species with >200 of records",
+  labs(title = "Species with >200 records",
        x = "Longitude", y = "Latitude") +
-  coord_quickmap(xlim = c(eubbox[1], eubbox[3]), ylim = c(eubbox[2], eubbox[4]))
+  coord_quickmap(xlim = c(eubbox[1], eubbox[3]),
+                 ylim = c(eubbox[2], eubbox[4]))
 
-# Print the plot
+# print the plot
 print(plot_uniq3rec)
 
 ```
 
-### **2.3. Prepare environmental data**
+## 3.1. Download Bio-Oracle ocean environmental data in raster files
 
-**2.3.1. Download Bio-Oracle**
+We will use [Bio-Oracle](https://www.bio-oracle.org/) data to extract the marine climatic and chemical conditions at the georeferenced points for each species and define the species' niche. Often, species niches characterised from occurrence data represent the "habitat conditions where the species can live" but not necessarily the conditions at which the species thrives. However, it is a good approximation to the "minimum" rather than "optimal" niche for the species.
 
-We will use these data to find the climatic conditions at the georeferenced points for each species, to establish the species' climatic niche. Climatic niche refers to the climatic conditions (temperature, humidity, rainfall) where species can survive. Defining the climatic niche of a species is useful for predicting the areas where that species could inhabit, even if we don't have recorded evidence of that. Lack of evidence of a species' presence at a site is usually the result of sampling and not always means that the species is not occurring at a place. We will come back to that point later.
+Defining the species' niche is useful for predicting the areas where that species could inhabit, even if we don't have recorded evidence of that. In a nutshell:
 
-The data resolution is 0.05°
+  - We gather the species occurrence data
+  - We select a set of environmental variables that we think describe the species' niche
+  - We extract the environmental features at the occurrence points
+  - We evaluate correlations between species' presence/absence and the environmental features
+  - We use the environmental features that best correlate with species presence/absence to predict species' presence/absence in areas we have not data for
+  - We assign probabilities to a species being observed or not in a pixel/cell based on the models
 
-For this step, we will use the following Bio-Oracle data, all surface layers (as oppose to benthic):
+Keep in mind that **lack of evidence of a species' presence at a site is usually the result of poor sampling effort and not always means that the species is truly absent**. For that reason, we need to model presence AND absence of a species.
 
-- Ocean temperature
+The environmental variables we "think" could predict the presence/absence of mollusca species in the marine surface areas (tidal, etc) are:
+
+- Temperature
 - Salinity
 - Nitrate
 - Phosphate
 - Silicate
 - Dissolved molecular oxygen
 - Iron
-- Primary productivity
-- pH
+- Primary productivity of algae/plants in the area
 - Chlorophyll
 - Sea ice thickness	
-- Sea ice cover	
-- Cloud cover
-- Air temperature
+- Sea ice cover
 
-We are useing `sdmpredictors` to download Open-Oracle data because the layers provided by the library are based on long-term averages and we don't need to average yearly layers.
+Bio-Oracle has marine layers for the "surface" and "benthic" levels. Because we are working with mollusca species that only live in the tidal and more shallow areas of the ocean, we will use the "surface" layers. We are using the `sdmpredictors` library to download Open-Oracle data because the layers provided by it are based on long-term averages and we don't need to aggregate yearly layers. As mentioned before, the raster resolution is 0.05 degrees.
 
-Surface layers are denoted with prefixes like BO2 (Bio-ORACLE 2) 
+Surface layers are denoted with prefixes like BO2 (Bio-ORACLE 2 dataset)
+
+The following code shows you how to download the data from the Bio-Oracle servers directly using R. However, if you downloaded the zipped file in the link at the beginning of this tutorial (or the canvas module), you will have the rasters already. Make sure the rasters (*tiff files) are unzipped and within a folder called "biooracle".
+
+The structure of your folders should look like `Documents/turku/biooracle*tiff`. **If you have the files already, skip the following code cell**.
 
 ```{r bioclim, eval=FALSE, echo=TRUE}
 
 # get the data for the variables defined above
-# we are using the finest resolution available from the data through the raster library
-
-# the same minimum and maximum limits we use for our analyses. It saves time and space.
+# we are using the finest resolution available
+# the same minimum and maximum limits we use for our analyses.
+# It saves time and space.
 latitude = c(32, 75)
 longitude = c(-20, 40)
 
@@ -589,23 +794,25 @@ vars <- c("BO2_tempmean_ss", "BO2_salinitymean_ss", "BO2_nitratemean_ss",
                "BO2_ironmean_ss", "BO2_ppmean_ss", "BO2_chlomean_ss", 
                "BO2_icethickmean_ss", "BO2_icecovermean_ss")
 
-# Create a directory to save the data
+# create a directory to save the data
 # run this line only once
+# SKIP IF THE FOLDER EXISTS
 dir.create("biooracle")
 
-# Loop through each variable and download the data
+# SKIP IF YOU HAVE THE DATA
+# loop through each variable name and download the data
 for (var in vars) {
-  # Download the data
+  # download the data
   data <- load_layers(
     layercodes = var,
     datadir = "biooracle",
     rasterstack = TRUE
   )
   
-  # Subset the data to the specified geographic range
+  # subset the data to the specified geographic range
   data_subset <- crop(data, extent(longitude[1], longitude[2], latitude[1], latitude[2]))
   
-  # Save the data
+  # save the data
   filename <- paste0("biooracle/", var, "_avg.tif")
   writeRaster(data_subset, filename, format = "GTiff")
   
@@ -618,20 +825,21 @@ Let's print the salinity raster to see how the data looks like
 
 ```{r plotsalinity, echo=TRUE, eval=TRUE, fig.width=5, fig.height=4, dpi=250}
 
-# Load the raster data
+# load the raster data, make sure the path is correct
 salinity <- raster("biooracle/BO2_salinitymean_ss_avg.tif")
 
-# Convert raster to data frame
+# convert raster to a data frame for easier plotting
 salinity_df <- as.data.frame(salinity, xy = TRUE)
 
-# Rename the columns for better readability
+# rename the columns for better readability and tractability
 colnames(salinity_df) <- c("decimalLongitude", "decimalLatitude", "salinity")
 
-# Plot using ggplot2
-ggplot(salinity_df, aes(x = decimalLongitude, y = decimalLatitude, fill = salinity)) +
+# plot the data using ggplot2
+ggplot(salinity_df, aes(x = decimalLongitude,
+                        y = decimalLatitude, fill = salinity)) +
   geom_raster() +
   scale_fill_viridis(name = "Salinity", na.value = "white") +
-  labs(title = "Surface Salinity (Average)") +
+  labs(title = "Surface salinity (Average)") +
   theme_minimal() +
   theme(
     plot.title = element_text(hjust = 0.5, size = 14),
@@ -642,23 +850,20 @@ ggplot(salinity_df, aes(x = decimalLongitude, y = decimalLatitude, fill = salini
     axis.ticks = element_blank()
   )
 ```
+
+We can try with the Iron layer now:
 
 ```{r plotiron, echo=TRUE, eval=TRUE, fig.width=5, fig.height=4, dpi=250}
 
-# Load the raster data
 iron <- raster("biooracle/BO2_ironmean_ss_avg.tif")
-
-# Convert raster to data frame
 iron_df <- as.data.frame(iron, xy = TRUE)
-
-# Rename the columns for better readability
 colnames(iron_df) <- c("decimalLongitude", "decimalLatitude", "iron")
 
-# Plot using ggplot2
-ggplot(iron_df, aes(x = decimalLongitude, y = decimalLatitude, fill = iron)) +
+ggplot(iron_df, aes(x = decimalLongitude,
+                    y = decimalLatitude, fill = iron)) +
   geom_raster() +
   scale_fill_viridis(name = "Iron", na.value = "white") +
-  labs(title = "Iron (Average)") +
+  labs(title = "Iron concentration (Average)") +
   theme_minimal() +
   theme(
     plot.title = element_text(hjust = 0.5, size = 14),
@@ -670,73 +875,76 @@ ggplot(iron_df, aes(x = decimalLongitude, y = decimalLatitude, fill = iron)) +
   )
 ```
 
+## 3.2. Estimate and test MaxEnt models
 
-### **2.4. Estimate and test MaxEnt models**
+There are several methods to estimate species distribution models, each with advantages and disadvantages. One of the most used is MaxEnt (Maximum Entropy). The MaxEnt function (from the R libraries) uses the environmental data extracted from the rasters at the species' occurrence points (presence data) and at "background" points that are simulated by the model. The function returns a "model object" that describes the correlations between environmental variables and species' presence/absence points and uses those correlations to predict the suitability of other locations and estimate the "entire distribution". From these sentences, you can already imagine that your model predictions will be biased by the environmental variables you choose and the data you have at hand.
 
-From R's MaxEnt help:
-
-Build a "MaxEnt" (Maximum Entropy) species distribution model (see references below). The function uses environmental data for locations of known presence and for a large number of 'background' locations. Environmental data can be extracted from raster files. The result is a model object that can be used to predict the suitability of other locations, for example, to predict the entire range of a species.
-
-Background points are sampled randomly from the cells that are not NA in the first predictor variable, unless background points are specified with argument a.
-
-A note on removing duplicates via the MaxEnt function. We are removing records falling within the same pixel during data cleaning and there is no need to instruct the `maxent` function to do it again.
+A note on removing duplicates via the MaxEnt function: We are removing redundant occurrences within the same pixel during data cleaning and there is no need to instruct the `maxent` function to do it again. However, you can rely on MaxEnt's function if you want.
 
 
 ```{r prinbioclim, eval=TRUE, echo=TRUE}
-# List the bioclimatic variable files
-biooracle_files <- list.files(path = "biooracle/", pattern = "+.tif$", full.names = TRUE)
 
-# Load the bioclimatic variables into a raster stack
+# create a vector with the path to all environmental variable's raster files
+# the pattern refers to the extension of the raster files
+# the $ symbol is used to match anything after "tif"
+biooracle_files <- list.files(path = "biooracle/",
+                              pattern = "+.tif$", full.names = TRUE)
+
+# load the environmental variables into a raster stack
+# a raster stack is like "placing all rasters on top of each other
+# based on coordinates"
 biooraclestack <- stack(biooracle_files)
 
-# define the list of variables we will use
-biooraclevars <- biooraclestack
-
-print(biooraclevars)
+# print some information about the stack
+print(biooraclestack)
 
 ```
-Let's print the names of the variables:
+
+Let's print the names of the variables. This is important because the names we used for downloading the data might differ slightly from the names of the actual files:
 
 ```{r printnames, echo=TRUE, eval=TRUE}
 
 print(names(biooraclestack))
 ```
 
-We want to check if variables should be transformed to logaritmic scale. We can do that by comparing the mean and median values. Normally distributed data should have very similar (if not identical) mean and median values.
+The next step before modelling, is understanding how the environmental data looks like. Most methods for estimating species distribution models are robust to data normality (whether the data follows a normal, bell-shaped distribution). However, you might want to transform your variables for biological reasons. For example, rainfall tends to follow a skewed distribution, where most of the data falls to the left of the distribution. For a small organism, the difference between 0.001 mm and 0.002 mm of rainfall can be crucial for survival. But passed 0.1 mm, the organism will be dead regardless of whether rainfall passes the 0.1001 mm levels. Thus, small differences are more important than large differences. In this case, you can argue that is more sensible to transform your rainfall variables into a logarithmic scale.
+
+Transformations, however, depend on the organism and its biology/life history traits. These are the kind of decisions you need to face before engaging in a project.
+
+We want to check if variables should be transformed to logarithmic scale. We can do that by comparing the mean and median values. Normally distributed data should have very similar (if not identical) mean and median values.
 
 ```{r tiffstats, eval=TRUE, echo=TRUE}
 
-# Function to calculate summary statistics and kernel density estimates
+# here, we are creating a function to estimate the Kernel Density of the data
+# it is similar to making a histogram but instead of binning the data into
+# categories, we estimate a continuous curve
+
 tifstats <- function(raster_layer) {
-  # Extract raster values (removing NA values)
+  # extract the values from the raster and remove NA (empty) values
   values <- getValues(raster_layer)
   values <- values[!is.na(values)]
   
-  # Calculate summary statistics
-  min_value <- min(values)
-  max_value <- max(values)
-  median_value <- median(values)
-  
-  # Create a density estimate
-  density_estimate <- density(values)
-  
+  # calculate the basic descriptive statistics
   return(list(
-    min = min_value,
-    max = max_value,
-    median = median_value,
-    density = density_estimate
+    min = min(values),
+    max = max(values),
+    median = median(values),
+    density = density(values)
   ))
 }
 
-# Apply the function to each layer in the raster stack
+# apply the function to each raster in the raster stack
+# and create a vector with the rasters' statistics
 stats_list <- lapply(1:nlayers(biooraclestack), function(i) {
   tifstats(biooraclestack[[i]])
 })
 
-# Name the list elements with layer names
+# assign a name to each statistic vector in the list
+# because we are using lapply, we can expect the rasters and
+# names of the rasters to be in the same order.
 names(stats_list) <- names(biooraclestack)
 
-# Function to create a data frame for ggplot2
+# now, we create a function to estimate the kernel densities
 kde_df <- function(stats_list, variable_name) {
   density_df <- data.frame(
     x = stats_list[[variable_name]]$density$x,
@@ -746,12 +954,14 @@ kde_df <- function(stats_list, variable_name) {
   return(density_df)
 }
 
-# Combine all density data frames into one
+# we combine all density points into the same data frame
+# by passing the names of the rasters, the statistics for each raster
+# and applying the kernel density function to the data
 density_df <- do.call(rbind, lapply(names(stats_list), function(var) {
   kde_df(stats_list, var)
 }))
 
-# Plot the kernel density estimates using ggplot2 with facet_wrap
+# here, we are plotting all kernel density estimates
 ggplot(density_df, aes(x = x, y = y)) +
   geom_line(color = "magenta") +
   facet_wrap(~ variable, scales = "free") +
@@ -767,65 +977,85 @@ ggplot(density_df, aes(x = x, y = y)) +
 
 ```
 
-We might need to transform some variables that are very skewed. "MaxEnt is relatively robust to non-normal distributions of predictor variables, but transformations can still be beneficial for improving model performance and interpretability"
+Judging by the plots, we might need to transform some variables that are very skewed. Although "MaxEnt is relatively robust to non-normal distributions of predictor variables, transformations can still be beneficial for improving model performance and interpretability" (taken from MaxEnt's manual).
 
-We could use a logarithmic transformation for chlorophyl content, ice cover, ice thickness, iron content, nitrate content, phosphate, primary productivity, and silicate content. In the case of salinity, which has a long tail to the left, we could apply a square root transformation.
+We could use a logarithmic transformation for chlorophyll content, ice cover, ice thickness, iron content, nitrate content, phosphate, primary productivity, and silicate content. In the case of salinity, which has a long tail to the left, we could apply a square root transformation.
 
-Let's define the functions to transform a variable to logarithmic scale or square root, then then apply that function to the variables we need to transform:
+Let's define the functions to transform a variable to logarithmic scale or square root, then apply that function to the variables we need to transform:
 
 ```{r vartransform, echo=TRUE, eval=TRUE}
 
-# Define the transformation functions
-# log10
+# we create a function to apply the transformations
+# depending on the name of the variable that we want to apply it to
+# log10 transformation
 log_transform <- function(x) {
-  log10(x+1) # Handle non-positive values
+  log10(x+1) # we add one to all values in order to handle zero data
 }
 
+# square root transformation
 sqrt_transform <- function(x) {
   sqrt(x)
 }
 
-# Initialize an empty list to store transformed layers
-transformed_layers <- list()
+# now, we need to create an empty list to store the transformed rasters
+transformed_rasters <- list()
 
-# Apply the transformations to the specific variables
+# now, we loop (iterate) through the rasters in the stack
+# assign them to a layer variable, one by one
+# print the summary information for each, before transformations
+# then check the name of the variable
+# to apply the respective transformation
+
 for (var in names(biooraclestack)) {
-  cat("Processing variable:", var, "\n")  # Debugging step
+  # prints which variable you are currently processing - for debugging
+  cat("Processing variable:", var, "\n")
+  
+  # assigns the raster to a layer variable, one by one
+  # for better readability
   layer <- biooraclestack[[var]]
   
-  # Print summary statistics before transformation
+  # printing the summary values for each variable
+  # before applying the transformation
   cat("Before transformation:\n")
   print(summary(getValues(layer)))
   
-  if (var %in% c("BO2_chlomean_ss_avg", "BO2_icecovermean_ss_avg", "BO2_icethickmean_ss_avg", 
-                 "BO2_ironmean_ss_avg", "BO2_nitratemean_ss_avg", "BO2_phosphatemean_ss_avg", 
+  # check, if the variable name is within this list, then apply a log transform
+  if (var %in% c("BO2_chlomean_ss_avg", "BO2_icecovermean_ss_avg",
+                 "BO2_icethickmean_ss_avg", "BO2_ironmean_ss_avg",
+                 "BO2_nitratemean_ss_avg", "BO2_phosphatemean_ss_avg", 
                  "BO2_ppmean_ss_avg", "BO2_silicatemean_ss_avg")) {
     values <- getValues(layer)
-    values <- log_transform(values)
-    transformed_layer <- setValues(layer, values)
+    values <- log_transform(values) # apply the transformation
+    transformed_raster <- setValues(layer, values) # 
+    
   } else if (var == "BO2_salinitymean_ss_avg") {
     values <- getValues(layer)
-    values <- sqrt_transform(values)
-    transformed_layer <- setValues(layer, values)
+    values <- sqrt_transform(values) # apply the transformation
+    transformed_raster <- setValues(layer, values)
+    
   } else {
-    transformed_layer <- layer  # No transformation
+    transformed_raster <- layer  # no transformation needed for anything else
   }
   
-  # Print summary statistics after transformation
+  # print the summary values after transformation
+  # and check whether they look different or not
+  # (they should for any transformed raster)
   cat("After transformation:\n")
-  print(summary(getValues(transformed_layer)))
+  print(summary(getValues(transformed_raster)))
   
-  # Ensure the transformed layer has the correct name
-  names(transformed_layer) <- var
+  # assign the correct name to each transformed raster
+  names(transformed_raster) <- var
   
-  # Add the transformed layer to the list
-  transformed_layers <- c(transformed_layers, transformed_layer)
+  # add the transformed raster to the list we created at the beginning
+  # basically, you are appending the new transformed raster
+  # to the list. Appending is different from re-writing the list!
+  transformed_rasters <- c(transformed_rasters, transformed_raster)
 }
 
-# Combine the transformed layers into a raster stack
-transformed_stack <- stack(transformed_layers)
+# combine the transformed rasters into a raster stack
+transformed_stack <- stack(transformed_rasters)
 
-# Print the transformed stack
+# print the transformed stack
 print(transformed_stack)
 
 
@@ -835,20 +1065,18 @@ Let's print the distribution of the values again:
 
 ```{r printtransformed, echo=TRUE, eval=TRUE}
 
-# Apply the function to each layer in the raster stack
+# beware that we are re-writing the stats_list object here
+# and adding the transformed data now
 stats_list <- lapply(1:nlayers(transformed_stack), function(i) {
   tifstats(transformed_stack[[i]])
 })
 
-# Name the list elements with layer names
 names(stats_list) <- names(transformed_stack)
 
-# Combine all density data frames into one
 density_df <- do.call(rbind, lapply(names(stats_list), function(var) {
   kde_df(stats_list, var)
 }))
 
-# Plot the kernel density estimates using ggplot2 with facet_wrap
 ggplot(density_df, aes(x = x, y = y)) +
   geom_line(color = "green") +
   facet_wrap(~ variable, scales = "free") +
@@ -864,143 +1092,290 @@ ggplot(density_df, aes(x = x, y = y)) +
 
 ```
 
+Now, modelling time!!!
 
+First, we will try estimating the species distribution model for one species only so that we can have a better look at the diagnostics without making the tutorial too long.
+
+A note on **projections**:
+A projection (there are multiple) is a transformation of data that deals with curved representation of Earth's so that we can "project" it in a flat plane. In other words, is the transformation of coordinates in a round surface to a flat surface. Naturally, projections distort the maps and the choice of projection depends on the purpose of the map. More importantly, dealing with multiple coordinate sources requires us to have all data in the same projection, otherwise, coordinates in one dataset are not comparable to coordinates in another dataset.
+
+
+``` {r getnicheone, eval=TRUE, echo=TRUE, fig.width=5, fig.height=4, dpi=250}
+
+# filter the records that belong to the 17th species in the list
+sppdata <- subset(uniqspp3rec, species == spp3recs[17])
+  
+# convert the table to a SpatialPointsDataFrame object
+# assign the map projection. CRS = coordinate system (related to projection)
+species_points <- SpatialPointsDataFrame(
+  coords = sppdata[, c("decimalLongitude", "decimalLatitude")],
+  data = sppdata,
+  proj4string = CRS("+proj=longlat +datum=WGS84")
+)
+  
+# Extract environmental data from the rasters at the occurrence points
+occurrence_vars <- extract(transformed_stack, species_points)
+  
+# add the extracted environmental data to the table with occurrence points
+sppdata <- cbind(sppdata, occurrence_vars)
+
+# remove rows with NA (empty) values
+# these can emerge if the raster has no data at a particular coordinate
+sppdata <- sppdata[complete.cases(sppdata), ]
+
+# convert the table again to an SpatialPointsDataFrame object
+# we are doing it again because the extract function needs a 
+# SpatialPointsDataFrame object but returns a dataframe object
+# and the next functions need a SpatialPointsDataFrame object too
+species_points <- SpatialPointsDataFrame(
+  coords = sppdata[, c("decimalLongitude", "decimalLatitude")],
+  data = sppdata,
+  proj4string = CRS("+proj=longlat +datum=WGS84")
+)
+  
+# because we removed NA rows before, we need to
+# check if the species has enough presence points left
+# what we mean for "enough" entirely depends on the organism
+# and how well the data you have truly represents the species' niche
+# you can re-run this code using different thresholds for "enough" data
+if (nrow(sppdata) < 100) {
+  warning(paste("Not enough presence points for species", spp3recs[17],
+                "Skipping species after removing NAs."))
+  next
+}
+  
+# to limit the model estimation (and the time it takes)
+# we need to define the extent of our "study area"
+# based on the area of the transformed stacks
+# which we already cropped :)
+area_extent <- extent(transformed_stack)
+
+# we create a variable with the number of background points to 
+# generate. In this case 10,000 but you can play around with it
+# the literature recommends at least 10,000 (always more than your data)
+# but this is another "decision" to optimise
+num_background <- 10000
+
+# use the randomPoints function to generate the background points
+bckgrnd <- randomPoints(transformed_stack, num_background, ext = area_extent)
+
+# convert the points to a dataframe
+bckgrnd_df <- as.data.frame(bckgrnd)
+# and name the columns
+colnames(bckgrnd_df) <- c("decimalLongitude", "decimalLatitude")
+
+# run the model
+# providing the background points and the species points
+# as well as the stack of transformed rasters
+maxent_model <- maxent(x = transformed_stack,
+                       a = bckgrnd_df, p = species_points)
+
+# run the same model again, with arguments J and P
+maxent_model2 <- maxent(x = transformed_stack,
+                        a = bckgrnd_df, p = species_points,
+                        args = c("-J", "-P"))
+  
+# plot the importance of each variable
+# the importance is a proxy for the correlation between variable and data
+# and tells you which variable contributes to explain most of the data's
+# variance
+plot(maxent_model2)
+  
+# check the response curves. These tell you how the variable predicts the
+# species' distribution, at each value of the predicting variable
+# it is helpful to understand if the correlation between variable and species
+# is linear or not
+response(maxent_model2)
+
+# estimate the species distribution!
+# using the model we calculated and the transformed rasters
+prediction <- predict(maxent_model, transformed_stack)
+  
+# plot the prediction!
+plot(prediction, 
+     main = paste("Predicted Distribution for", spp3recs[17]),
+     col = viridis(100), 
+     legend.args = list(text = 'Suitability', side = 4, font = 2,
+                        line = 2.5, cex = 0.8))
+
+```
+
+**Percent Contribution or Importance of a variable:** The contribution or importance of a variable is calculated during the model training process. One variable at a time, the variable is used to make a decision while the model keeps track of the improvement of the model’s accuracy. If the accuracy improves substantially, the variable has a greater importance (or contributes more) to the predictions.
+
+**Response Curves:** These curves show how the predicted suitability for a species change as the values of one variable (at a time) changes (all else equal).
+
+Now, let's model all the species and save the models to a list and to files, in case we need to evaluate them separately. We are not plotting every single model prediction because we have limited time, but you can use the code above to play around with different species individually.
+
+**Note on models and Java installations:** On the off-chance that your Java installation is not working and you cannot run MaxEnt functions, you have access to the models and predictions for all species within the `output` folder. Please make sure not to re-write it!
 
 ``` {r getniche, eval=TRUE, echo=TRUE, fig.width=5, fig.height=4, dpi=250}
 
+# create a folder to save predictions and models
+# you need to create the folder only once
+output_dir <- "output_new/"
+dir.create(output_dir, showWarnings = FALSE)
 
-# List to store results
+# create empty lists to store the models and predictions
 models <- list()
 predictions <- list()
 
-# Unique species list, species here have at least three records and species identification
-spp3recs
+# you can print the list of species
+print(spp3recs)
 
-
-# Loop through each of the first three species
-for (species in spp3recs[10:13]) {
-  # Subset data for the species
+# We are using a loop to iterate through each of the species in the list
+# then carry out the same code as before, only inside a loop
+for (species in spp3recs) {
   sppdata <- subset(uniqspp3rec, species == species)
   
-  # Convert to SpatialPointsDataFrame
   species_points <- SpatialPointsDataFrame(
     coords = sppdata[, c("decimalLongitude", "decimalLatitude")],
     data = sppdata,
     proj4string = CRS("+proj=longlat +datum=WGS84")
   )
   
-  # Extract bioclimatic data for occurrence points
   occurrence_vars <- extract(transformed_stack, species_points)
-  
-  # Combine extracted bioclimatic data with occurrence points
   sppdata <- cbind(sppdata, occurrence_vars)
-  
-  # Remove rows with NA values
   sppdata <- sppdata[complete.cases(sppdata), ]
-  
-  # Convert back to SpatialPointsDataFrame if needed
+
   species_points <- SpatialPointsDataFrame(
     coords = sppdata[, c("decimalLongitude", "decimalLatitude")],
     data = sppdata,
     proj4string = CRS("+proj=longlat +datum=WGS84")
   )
   
-  # Check if there are enough presence points left
   if (nrow(sppdata) < 100) {
-    warning(paste("Not enough presence points for species", species, "after removing NAs. Skipping..."))
+    warning(paste("Not enough presence points for species", species,
+                  "Skipping after removing NAs."))
     next
   }
   
-  # Define the study area extent
   area_extent <- extent(transformed_stack)
-
-  # Number of background points (e.g., 10,000)
   num_background <- 10000
 
-  # Generate background points
-  bckgrnd <- randomPoints(transformed_stack, num_background, ext = area_extent)
+  bckgrnd <- randomPoints(transformed_stack, num_background,
+                          ext = area_extent)
 
-  # Convert to data frame
   bckgrnd_df <- as.data.frame(bckgrnd)
   colnames(bckgrnd_df) <- c("decimalLongitude", "decimalLatitude")
 
-  # Run the model with arguments J and P
-  maxent_model <- maxent(x = transformed_stack, a = bckgrnd_df, p = species_points)
+  maxent_model <- maxent(x = transformed_stack,
+                         a = bckgrnd_df, p = species_points)
   
-  # Run the model with arguments J and P
-  maxent_model2 <- maxent(x = transformed_stack, a = bckgrnd_df, p = species_points, args = c("-J", "-P"))
-  
-  # plot the importance of each variable
-  plot(maxent_model2)
-  
-  # check the response curves
-  response(maxent_model2)
-  
-  # Store the model
+  # store the model for each species, indicating the species name
   models[[species]] <- maxent_model
   
-  # Predict species distribution
+  # save the model to a file
+  # the output_dir variable is define at the beginning of this code cell
+  # it will create a file with the "model_" prefix, species name
+  # and *.rds extension
+  saveRDS(maxent_model, file = paste0(output_dir, "model_", species, ".rds"))
+  
   prediction <- predict(maxent_model, transformed_stack)
   
-  # Store the prediction
+  # store the prediction for each species, indicating the species name
   predictions[[species]] <- prediction
   
-  # Plot the prediction
-  plot(prediction, 
-       main = paste("Predicted Distribution for", species),
-       col = viridis(100), 
-       legend.args = list(text = 'Suitability', side = 4, font = 2, line = 2.5, cex = 0.8))
+  # save the prediction to a file, in raster format
+  # this function overwrites existing rasters with the same name
+  writeRaster(prediction, filename = paste0(output_dir,
+              "prediction_", species, ".tif"), format = "GTiff",
+              overwrite = TRUE)
 }
 ```
-**Percent Contribution:**
 
-This is calculated during the training process. Each time a variable is used to make a decision, the model keeps track of the improvement in the model’s accuracy due to that variable. These improvements are then normalized to percentages.
-Higher percent contributions indicate that the variable has a greater influence on the model's predictions.
+In case something fails and you cannot estimate the species' models, you can load the ones we estimated already and that you should have downloaded with the rest of the data (inside the `output` folder).
 
-**Response Curves:**
+```{r reloadmodels, eval=FALSE, echo=TRUE}
 
-Response curves show how the predicted suitability for the species changes as the value of a single environmental variable changes, while keeping all other variables at their average sample value. These curves help in understanding the ecological relationships between the species and the environmental variables.
+# Directory where predictions and models are saved
+# note that we are re-defining the output_dir variable here
+output_dir <- "output/"
 
-Now, we need to evaluate the models.
+# create empty lists for the re-loaded models and predictions
+reloaded_models <- list()
+reloaded_predictions <- list()
+
+# loop through each species to reload its models and predictions
+# using the species list as a reference
+for (species in spp3recs) {
+  # Reload the model
+  model_path <- paste0(output_dir, "model_", species, ".rds")
+  # check the path exists!
+  if (file.exists(model_path)) {
+    reloaded_models[[species]] <- readRDS(model_path)
+  }
+  
+  # Reload the prediction
+  prediction_path <- paste0(output_dir, "prediction_", species, ".tif")
+  if (file.exists(prediction_path)) {
+    reloaded_predictions[[species]] <- raster(prediction_path)
+  }
+}
+
+# check a random species, to make sure that the re-loading of the data worked
+
+egmodel <- reloaded_models[[spp3recs[13]]]
+egprediction <- reloaded_predictions[[spp3recs[13]]]
+
+print(egmodel)
+
+# plot the prediction reloaded
+# plot the prediction!
+plot(egprediction, 
+     main = paste("Predicted Distribution for", spp3recs[13]),
+     col = viridis(100), 
+     legend.args = list(text = 'Suitability', side = 4, font = 2,
+                        line = 2.5, cex = 0.8))
+
+```
+
+
+Now, we need to evaluate the models. For the purpose of this tutorial, our evaluation is simple and our environmental variable selection "basic". For more in-depth analyses, you will need to test different settings for the modeling (e.g. number of background points, minimum amount of records per species) and evaluate the performance of the models.
+
+For now:
 
 ```{r modeleval, echo=TRUE, eval=TRUE}
 
-# List to store evaluation results
+# we create an empty evaluation list
 evaluations <- list()
 
-# Define background points for evaluation
-bckgrnd_eval <- randomPoints(transformed_stack, 10000) # 10,000 random background points
+# create random background points for evaluating the models
+# 10,000 random background points, must be the same as with the models above
+bckgrnd_eval <- randomPoints(transformed_stack, 10000)
 bckgrnd_eval <- as.data.frame(bckgrnd_eval)
 colnames(bckgrnd_eval) <- c("decimalLongitude", "decimalLongitude")
 
-# Loop through each species to evaluate the models
+# loop through each species to evaluate the models
 for (species in names(models)) {
-  # Retrieve the model
+  # retrieve the model
   maxent_model <- models[[species]]
   
-  # Retrieve the species data
+  # retrieve the species data
   sppdata <- subset(uniqspp3rec, species == species)
   
-  # Convert to SpatialPointsDataFrame
+  # convert to SpatialPointsDataFrame and assign a projection
   species_points <- SpatialPointsDataFrame(
     coords = sppdata[, c("decimalLongitude", "decimalLatitude")],
     data = sppdata,
     proj4string = CRS("+proj=longlat +datum=WGS84")
   )
   
+  # evaluate the model using the cross-validation method
+  eval <- evaluate(maxent_model, p = species_points,
+                   a = bckgrnd_eval, x = transformed_stack,
+                   method = "crossvalidation", k = 5)
   
-  # Evaluate the model using cross-validation
-  eval <- evaluate(maxent_model, p = species_points, a = bckgrnd_eval, x = transformed_stack, method = "crossvalidation", k = 5)
-  
-  # Store the evaluation results for this species
+  # store the evaluation results for each species
+  # indicating the name of the species
+  # and storing the Area Under the Curve
   evaluations[[species]] <- eval@auc
   
-  # Print mean AUC value
+  # print the mean area under the curve value
   print(paste("AUC for", species, eval@auc))
 }
 
 
-# Function to summarize evaluation results
+# Function to summarise evaluation results in a single table
 summarize_evaluation_results <- function(evaluations) {
   summary_list <- lapply(names(evaluations), function(species) {
     auc_values <- evaluations[[species]]
@@ -1012,137 +1387,147 @@ summarize_evaluation_results <- function(evaluations) {
   do.call(rbind, summary_list)
 }
 
-# Summarize the evaluation results
+# apply the function for summarising and print the summary 
 evaluation_summary <- summarize_evaluation_results(evaluations)
 print(evaluation_summary)
 
 ```
 
-Area Under the Curve (AUC) of the Receiver Operating Characteristic (ROC) curve is a widely used metric to evaluate the performance of species distribution models, including MaxEnt. AUC values range from 0 to 1, where higher values indicate better model performance. Here is a general interpretation of AUC values:
+The **Area Under the Curve (AUC)** is a widely used metric to evaluate the performance of species distribution models, including MaxEnt. AUC values range from 0 to 1, where values closer to one indicate better model performance. Here is a general interpretation of AUC values:
 
-- AUC = 0.5: The model performs no better than random chance.
-- 0.5 < AUC ≤ 0.7: The model has poor to fair performance.
-- 0.7 < AUC ≤ 0.8: The model has acceptable performance.
-- 0.8 < AUC ≤ 0.9: The model has excellent performance.
-- AUC > 0.9: The model has outstanding performance.
+  - AUC = 0.5: The model performs no better than random chance.
+  - 0.5 < AUC <= 0.7: The model has poor to fair performance.
+  - 0.7 < AUC <= 0.8: The model has acceptable performance.
+  - 0.8 < AUC <= 0.9: The model has excellent performance.
+  - AUC > 0.9: The model has outstanding performance.
 
-Evaluating Model Performance
-When evaluating your MaxEnt models, you should aim for AUC values above 0.7 to consider the models reasonably good. However, be cautious with very high AUC values (close to 1) as they might indicate overfitting, especially if the dataset is small or has low variability.
+The evaluations for our models look pretty good. However, be cautious with very high AUC values (close to 1) as they might indicate over-fitting, especially if the dataset is small or has low variability, or if you are incorporating several environmental variables that are autocorrelated.
 
-## **3. Estimate species diversity**
+# 4. Estimate species diversity and overlap with human-impact maps
 
-**Summary:**
-
-Generate MaxEnt Models for Each Species:
-
-Use the provided script to generate and store MaxEnt models for each species.
-Predict Species Presence for Each Model:
-
-Predict the presence probabilities for each species using the stored MaxEnt models.
-Combine Predictions to Estimate Species Diversity:
+After we generated the MaxEnt species distribution models, we need to compile them together to be able to count the number of species present in each pixel. The models essentially provide us with a probability that a particular species is present in a particular pixel. Once we compile them all, we transform those probabilities into a binary "presence" or "absence" category based on a threshold that we define depending on how much we trust the models. If the models do not perform the best, we need higher thresholds to consider a species as "present", because we don't have as much certainty about its "actual" presence. After transforming the data into presence/absence, we count the species present at every pixel and create a map of **species diversity**, in our case, **diversity of threatened mollusca species**
 
 For each pixel, count the number of species with presence probability above a threshold (e.g., 0.5).
 
 ```{r sppdiver, echo=TRUE, eval=TRUE, fig.width=5, fig.height=4, dpi=250}
 
-# Initialize a raster to store species diversity
+# create empty objects to store the diversity raster
+# and the predictions for each species
+# we also start the species count at Zero
 diversity_raster <- raster(predictions[[1]])
 values(diversity_raster) <- 0
 
-# Define the threshold for presence probability
-threshold <- 0.3
+# define the threshold for presence probability
+# play around with this number and see what happens!
+threshold <- 0.5
 
-# Loop through each species prediction
+# loop through each species prediction
 for (species in names(predictions)) {
-  # Retrieve the prediction
   prediction <- predictions[[species]]
-  
-  # Convert the prediction to binary presence/absence based on the threshold
+  # true or false. Presence of a species if the prediction for
+  # that pixel is higher than the threshold
   binary_prediction <- prediction > threshold
   
-  # Sum the binary predictions to the diversity raster
+  # add the presence for that species to the overall diversity raster
   diversity_raster <- diversity_raster + binary_prediction
 }
 
-# Convert the species diversity raster to a data frame for ggplot2
-diversity_df <- as.data.frame(rasterToPoints(diversity_raster), stringsAsFactors = FALSE)
+# convert the species diversity raster to a data frame for ggplot2
+diversity_df <- as.data.frame(rasterToPoints(diversity_raster),
+                              stringsAsFactors = FALSE)
 colnames(diversity_df) <- c("longitude", "latitude", "diversity")
 
-# Plot the species diversity using ggplot2
+# plot the species diversity using ggplot2
 ggplot(diversity_df, aes(x = longitude, y = latitude, fill = diversity)) +
   geom_raster() +
-  scale_fill_viridis_c(name = "Species Count") +
+  scale_fill_viridis_c(name = "Species count") +
   labs(title = "Species Diversity",
        x = "Longitude",
        y = "Latitude") +
   theme_minimal()
 
 ```
-We want to compare the areas of high species diversity with areas where pollution or impact of human activities are high.
 
-First, we need to load the layer
+
+Now that we have an estimate of the mollusca species diversity, we can spot the areas with the highest diversity and compare them to areas where pollution or impact of human activities are high.
+
+First, we need to load the HELCOM raster of human impact index. For now on, we will focus on the Baltic sea area.
 
 ```{r loadhola, echo=TRUE, eval=TRUE, fig.width=5, fig.height=4, dpi=250}
 
+# you will have the eutro_hazard_HOLAS3 folder zipped
+# unzip it before running this code and make sure the path is correct
 helcom_tif_path <- "eutro_hazard_HOLAS3/SPIA_eutro_hazard_HOLAS3.tif"
+
+# load the raster
 helcom_raster <- raster(helcom_tif_path)
 
-# Convert the HELCOM raster to a data frame for ggplot2
-helcom_df <- as.data.frame(rasterToPoints(helcom_raster), stringsAsFactors = FALSE)
+# transform the HELCOM raster to a data frame and plot it with ggplot2
+helcom_df <- as.data.frame(rasterToPoints(helcom_raster),
+                           stringsAsFactors = FALSE)
+# name the columns
 colnames(helcom_df) <- c("longitude", "latitude", "impact")
 
-# Plot the HELCOM data using ggplot2
+# and plot the HELCOM data using ggplot2
 ggplot(helcom_df, aes(x = longitude, y = latitude, fill = impact)) +
   geom_raster() +
   scale_fill_viridis_c(name = "Impact") +
-  labs(title = "Potential Cumulative Impacts of Eutrophication and Hazardous Substances",
+  labs(title = "Cumulative impacts of eutrophication and hazardous substances",
        x = "Longitude",
        y = "Latitude") +
   theme_minimal()
 
 ```
 
-Let's plot species diversity at the same area
+Let's plot species diversity specifically in the Baltic sea area
 
 ```{r plotbalticsppdiv, echo=TRUE, eval=TRUE, fig.width=5, fig.height=4, dpi=250}
 
-# Check CRS of both rasters
+# check that both rasters have the same CRS (coordinate system)
 diversity_crs <- crs(diversity_raster)
 helcom_crs <- crs(helcom_raster)
 
-# If the CRS of the rasters do not match, reproject the diversity raster to match the HELCOM raster
+# if the CRS of the rasters doesn't match, reproject the diversity raster
+# to match the HELCOM raster
 if (!compareCRS(diversity_crs, helcom_crs)) {
   diversity_raster <- projectRaster(diversity_raster, crs = helcom_crs)
 }
 
-# Align the resolution of the diversity raster to match the HELCOM raster
-diversity_raster_aligned <- resample(diversity_raster, helcom_raster, method = "bilinear")
+# match the resolution of the diversity raster to that of the HELCOM raster
+diversity_raster_aligned <- resample(diversity_raster,
+                                     helcom_raster, method = "bilinear")
 
-# Crop the aligned diversity raster to the extent of the HELCOM raster
-diversity_raster_cropped <- crop(diversity_raster_aligned, extent(helcom_raster))
+# crop the diversity raster to the extent of the HELCOM raster (Baltic sea)
+diversity_raster_cropped <- crop(diversity_raster_aligned,
+                                 extent(helcom_raster))
 
-# Convert the cropped species diversity raster to a data frame for ggplot2
-diversity_df <- as.data.frame(rasterToPoints(diversity_raster_cropped), stringsAsFactors = FALSE)
+# transform the cropped diversity raster to a data frame for ggplot2 plotting
+diversity_df <- as.data.frame(rasterToPoints(diversity_raster_cropped),
+                              stringsAsFactors = FALSE)
 colnames(diversity_df) <- c("longitude", "latitude", "diversity")
 
-# Plot the data
+# plot the rasters together
 # geom_tile() explicitly handles the boundaries of each cell.
 ggplot() +
-  geom_tile(data = diversity_df, aes(x = longitude, y = latitude, fill = diversity), alpha = 0.5) +
-  geom_tile(data = helcom_df, aes(x = longitude, y = latitude, fill = impact), alpha = 0.5) +
+  geom_tile(data = diversity_df, aes(x = longitude,
+                                     y = latitude, fill = diversity),
+            alpha = 0.5) +
+  geom_tile(data = helcom_df, aes(x = longitude,
+                                  y = latitude, fill = impact),
+            alpha = 0.5) +
   scale_fill_viridis_c() +
-  labs(title = "Species Diversity with HELCOM Impacts",
+  labs(title = "Species diversity overlapped with human impacts",
        x = "Longitude",
        y = "Latitude") +
   theme_minimal()
+
 ```
 
-
-It is not easy to see the differences when simply plotting the maps. We can set thresholds for each raster depending on what is biologically and ecologycally relevant. Let's assume that:
+We plotted both rasters together; however, it is not easy to see the differences and matches between them. To improve visibility and decide what is a concerning overlap between diversity and impacts. In other words, we can decide 1) what is a threshold for "high diversity" and 2) what is a threshold for "high impact". We can set thresholds for each raster depending on what is biologically and ecologically relevant. Let's assume that:
 
 ```{r definethres, eval=TRUE, echo=TRUE}
 
-# Apply the thresholds
+# Apply the thresholds, play around with them
 diversity_threshold <- 3
 helcom_threshold <- 30
 
@@ -1152,49 +1537,39 @@ helcom_binary <- helcom_raster > helcom_threshold
 ```
 
 
-Now, we ideintify areas where both rasters meet the thresholds set for each
+Apply the thresholds to the rasters and plot the results:
 
 ```{r comrasters, echo=TRUE, eval=TRUE, fig.width=5, fig.height=4, dpi=250}
 
 # Identify areas where both rasters exceed the thresholds
 combined_binary <- diversity_binary & helcom_binary
 
-# Convert the combined binary raster to a data frame for ggplot2
-combined_df <- as.data.frame(rasterToPoints(combined_binary), stringsAsFactors = FALSE)
+# transform the combined raster (biodiversity + impact) to a data frame
+combined_df <- as.data.frame(rasterToPoints(combined_binary),
+                             stringsAsFactors = FALSE)
+# name the columns
 colnames(combined_df) <- c("longitude", "latitude", "value")
 
 # Plot the data
 ggplot() +
-  geom_tile(data = combined_df, aes(x = longitude, y = latitude, fill = value)) +
-  scale_fill_viridis_c(name = "Overlap", breaks = c(0, 1), labels = c("Below Threshold", "Above Threshold")) +
-  labs(title = "Areas with High Species Diversity and HELCOM Impact",
-       x = "Longitude",
-       y = "Latitude") +
-  theme_minimal()
-
-```
-We can try with another layer that shows pharmaceuticals in water. First, plot the layer alone
-
-
-```{r pharma, echo=TRUE, eval=TRUE, fig.width=5, fig.height=4, dpi=250}
-
-pharm_tif_path <- "PIA_eutro_hazard_HOLAS3/SPIA_eutro_hazard_HOLAS3.tif"
-pharm_raster <- raster(pharm_tif_path)
-
-# Convert the HELCOM raster to a data frame for ggplot2
-pharm_df <- as.data.frame(rasterToPoints(pharm_raster), stringsAsFactors = FALSE)
-colnames(pharm_df) <- c("longitude", "latitude", "impact")
-
-# Plot the HELCOM data using ggplot2
-ggplot(pharm_df, aes(x = longitude, y = latitude, fill = impact)) +
-  geom_raster() +
-  scale_fill_viridis_c(name = "Pharmaceuticals found in water") +
-  labs(title = "Pharmaceuticals found in water",
+  geom_tile(data = combined_df, aes(x = longitude,
+                                    y = latitude, fill = value)) +
+  scale_fill_viridis_c(name = "Overlap", breaks = c(0, 1),
+                       labels = c("Below thresholds", "Above thresholds")) +
+  labs(title = "Areas with high species diversity and human impact",
        x = "Longitude",
        y = "Latitude") +
   theme_minimal()
 
 ```
 
+# Questions for you:
 
-...
+**1.** Which areas do you identify as concerning? e.g. have a high diversity of threatened species and a high human impact affecting them.
+
+**2.** Do those areas change if you relax or tight your thresholds?
+
+**3.** If you change the threshold for the probability of a species being present in an area, what are the areas of concern for species conservation?
+
+**4.** You have a raster with information about pharmaceuticals on the water. Re-run the analyses and discuss the areas of concern. Do they compare to the areas you identified of high diversity and high human impact?
+
